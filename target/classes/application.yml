@@ -1,0 +1,45 @@
+
+#配置mapper.xml的路径
+mybatis:
+  mapper-locations: classpath:mapping/*.xml
+spring:
+  #处理全局异常404等
+  mvc:
+    throw-exception-if-no-handler-found: true
+  resources:
+    add-mappings: false
+#配置数据库JDBC数据源
+  datasource:
+    name: seckill
+    url: jdbc:mysql://localhost:3306/seckill?useUnicode=true&characterEncoding=UTF-8&serverTimezone=GMT%2B8&useSSL=false
+    username: root
+    password: 77549252
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+  # 配置Redis相关参数
+  redis:
+    host: 47.111.2.209
+    port: 6379
+    database: 1
+  # 配置Redis连接池
+    jedis:
+      pool:
+        max-active: 50
+        min-idle: 20
+#    password:
+server:
+  port: 8081
+  tomcat:
+    accept-count: 1000 #等待队列长度
+    threads:
+      max: 800   #最大线程数
+      min-spare: 100 #最小线程数
+    accesslog:
+      enabled: true #配置打印日志信息(分布式部署时用到辨别是否访问到)
+      directory: /usr/local/Java_jar/tomcat #日志目录
+      pattern: '%h %l %u %t %s %b %D' #日志格式
+
+mq:
+  topicName: stock
+  nameserver:
+    addr: 47.111.2.209:9876
