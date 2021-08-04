@@ -1,1 +1,0 @@
-let g_host = "localhost:8081"

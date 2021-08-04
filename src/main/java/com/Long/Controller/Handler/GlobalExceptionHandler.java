@@ -22,6 +22,7 @@ import java.util.Map;
  **/
 @ControllerAdvice
 public class GlobalExceptionHandler{
+
     @ExceptionHandler(Exception.class)
     @ResponseBody
     public CommonReturnType doError(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Exception ex) {

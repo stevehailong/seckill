@@ -23,7 +23,7 @@ import java.util.Map;
 
 /**
  * @program: Seckill
- * @description: 消息生产者
+ * @description: 消息生产者 事务型消息，会随着下单操作的失败或成功进行回滚或提交
  * @author: 寒风
  * @create: 2021-04-09 19:24
  **/
@@ -70,7 +70,6 @@ public class MqProducer {
                 String stockLogId = (String) ((Map)arg).get("stockLogId");
                 try {
                     orderService.createOrder(userId,itemId,promoId,amount,stockLogId);
-//                    orderService.createOrder(userId,itemId,promoId,amount,stockLogId);
                 } catch (BusinessException e) {
                     e.printStackTrace();
                     //设置对应的stockLog为回滚状态
@@ -82,7 +81,7 @@ public class MqProducer {
                 return LocalTransactionState.COMMIT_MESSAGE;
             }
             /**
-             * @Description // 相当于上面创建订单执行阻塞时，会回调此方法进行回调或提交处理。
+             * @Description // 相当于上面创建订单执行阻塞时或mysql宕机时，会回调此方法进行回调或提交处理。
              **/
             @Override
             public LocalTransactionState checkLocalTransaction(MessageExt msg) {

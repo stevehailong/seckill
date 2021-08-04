@@ -21,7 +21,7 @@ public class ValidatorImpl implements InitializingBean {
 
     /**
      * @Author 寒峰
-     * @Description //TODO  实现校验方法并返回校验结果
+     * @Description /  实现校验方法并返回校验结果
      * @Date 8:49 PM 3/19/2021
      * @Param [bean]
      * @return ValidationResult
@@ -46,7 +46,7 @@ public class ValidatorImpl implements InitializingBean {
     /**
      * @return void
      * @Author 寒峰
-     * @Description //TODO Bean初始化后，会调用这个方法
+     * @Description // Bean初始化后，会调用这个方法
      * @Date 8:41 PM 3/19/2021
      * @Param []
      **/

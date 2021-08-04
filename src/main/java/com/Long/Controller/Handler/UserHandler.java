@@ -136,7 +136,6 @@ public class UserHandler extends BaseHandler {
         uuidToken = uuidToken.replace("-",""); // 去掉uuid的横线
         redisTemplate.opsForValue().set(uuidToken,userModel);
         redisTemplate.expire(uuidToken,1, TimeUnit.HOURS); // 设置1小时过期
-
         return CommonReturnType.create(uuidToken);
     }
 }

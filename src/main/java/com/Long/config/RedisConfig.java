@@ -23,6 +23,7 @@ import org.springframework.stereotype.Component;
 @EnableRedisHttpSession(maxInactiveIntervalInSeconds = 3600)
 @Component //注册一个bean进入Springboot
 public class RedisConfig {
+
     @Bean
     public RedisTemplate redisTemplate(RedisConnectionFactory redisConnectionFactory){
         RedisTemplate redisTemplate = new RedisTemplate();
