@@ -114,7 +114,7 @@ public class ItemServiceImpl implements ItemService {
      * @description 通过id获取商品详情
      */
     @Override
-    public ItemModel getItemById(Integer id) {
+    public ItemModel getItemById(Integer id) throws BusinessException {
         Item item = itemMapper.selectByPrimaryKey(id);
         if (item == null) return null;
         // 获得库存数量
@@ -131,7 +131,7 @@ public class ItemServiceImpl implements ItemService {
 
     
     @Override
-    public ItemModel getItemByIdInCache(Integer id) {
+    public ItemModel getItemByIdInCache(Integer id) throws BusinessException {
         ItemModel itemModel = (ItemModel) redisServive.getKey("item_validate_" + id);
         // 如果Redis中不存在就从数据库中取，并存入缓存中
         if (itemModel == null) {

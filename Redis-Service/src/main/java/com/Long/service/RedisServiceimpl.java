@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit;
  * @create: 2021-08-06 11:53
  **/
 @org.springframework.stereotype.Service
-@Service(timeout = 1000,retries = 3,interfaceClass = RedisServive.class)//暴露服务 动态代理使用的是接口的实现类
+@Service(interfaceClass = RedisServive.class)//暴露服务 动态代理使用的是接口的实现类
 public class RedisServiceimpl implements RedisServive {
 
     private Cache<String,Object> commonCache = null;

@@ -35,13 +35,13 @@ public class UserController  extends BaseHandler{
 
     static final String PATTEN_REGEX_PHONE = "^((13[0-9])|(15[^4])|(18[0,2,3,5-9])|(17[0-8])|(147))\\d{8}$";
 
-    @Reference(timeout=10000)
+    @Reference
     private UserService userService;
 
     @Autowired
     private HttpServletRequest httpServletRequest; //不会发生并发问题
 
-    @Reference(timeout=1000)
+    @Reference
     private RedisServive redisServive;
 
     @RequestMapping("/get/{id}")

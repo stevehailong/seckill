@@ -9,10 +9,9 @@ dubbo:
   protocol:
     name: dubbo #dubbo\u4F7F\u7528\u7684\u901A\u4FE1\u534F\u8BAE\u540D\u79F0
     port: 21222 #dubbo\u4F7F\u7528\u7684\u901A\u4FE1\u534F\u8BAE\u7AEF\u53E3
+    serialization: kryo
   monitor:
     protocol: registry #\u8FDE\u63A5\u76D1\u63A7\u4E2D\u5FC3\u7684\u914D\u7F6E
-  provider:
-    timeout: 100000 #\u63D0\u4F9B\u8005\u6240\u6709\u5B9E\u73B0\u7C7B\u7684\u8C03\u7528\u8D85\u65F6\u65F6\u95F4\u8BBE\u7F6E
 #\u914D\u7F6Emapper.xml\u7684\u8DEF\u5F84
 mybatis:
   mapper-locations: classpath:mapping/*.xml

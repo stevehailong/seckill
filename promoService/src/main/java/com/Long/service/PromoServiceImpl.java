@@ -1,5 +1,6 @@
 package com.Long.service;
 
+import com.Long.Error.BusinessException;
 import com.Long.Model.ItemModel;
 import com.Long.Model.PromoModel;
 import com.Long.Model.UserModel;
@@ -9,7 +10,7 @@ import com.alibaba.dubbo.config.annotation.Reference;
 import org.joda.time.DateTime;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import java.math.BigDecimal;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -19,7 +20,7 @@ import java.util.concurrent.TimeUnit;
  * @description: 秒杀逻辑的实现类
  * @author: 寒风
  **/
-@Service
+@Component
 @com.alibaba.dubbo.config.annotation.Service(interfaceClass = PromoService.class)
 public class PromoServiceImpl implements PromoService {
 
@@ -43,7 +44,7 @@ public class PromoServiceImpl implements PromoService {
         Promo promo = promoMapper.selectByItemId(itemId);
         PromoModel promoModel = convertFromEntity(promo);
         if (promoModel == null) {
-            return new PromoModel();
+            return null;
         }
         //判断秒杀活动状态
         if (promoModel.getStartTime().isAfterNow()) {
@@ -58,7 +59,7 @@ public class PromoServiceImpl implements PromoService {
 
     // 发布活动的逻辑
     @Override
-    public void publishPromo(Integer promoId) {
+    public void publishPromo(Integer promoId) throws BusinessException {
         // 通过活动id获取活动
         Promo promo = promoMapper.selectByPrimaryKey(promoId);
         if(promo.getItemId() == null || promo.getItemId() == 0){
@@ -87,7 +88,7 @@ public class PromoServiceImpl implements PromoService {
     }
 
     @Override
-    public String generateSecondKillToken(Integer promoId,Integer itemId,Integer userId) {
+    public String generateSecondKillToken(Integer promoId,Integer itemId,Integer userId) throws BusinessException {
 
         //判断是否库存已售罄，若对应的售罄key存在，则直接返回下单失败
         if(redisTemplate.hasKey("promo_item_stock_invalid_"+itemId)){
@@ -96,10 +97,10 @@ public class PromoServiceImpl implements PromoService {
         Promo promoDO = promoMapper.selectByPrimaryKey(promoId);
         //dataobject->model
         PromoModel promoModel = convertFromEntity(promoDO);
+
         if(promoModel == null){
             return null;
         }
-
         //判断当前时间是否秒杀活动即将开始或正在进行
         if(promoModel.getStartTime().isAfterNow()){
             promoModel.setStatus(1);

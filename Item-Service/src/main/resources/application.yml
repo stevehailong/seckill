@@ -12,8 +12,6 @@ dubbo:
     serialization: kryo
   monitor:
     protocol: registry #\u8FDE\u63A5\u76D1\u63A7\u4E2D\u5FC3\u7684\u914D\u7F6E
-  provider:
-    timeout: 100000
 #\u914D\u7F6Emapper.xml\u7684\u8DEF\u5F84
 mybatis:
   mapper-locations: classpath:mapping/*.xml

@@ -65,8 +65,7 @@ public class ItemHandler extends BaseHandler {
             itemVO.setPromoStatus(itemModel.getPromoModel().getStatus());
             itemVO.setPromoId(itemModel.getPromoModel().getId());
             itemVO.setPromoPrice(itemModel.getPromoModel().getPromoItemPrice());
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            itemVO.setStartTime(simpleDateFormat.format(itemModel.getPromoModel().getStartTime()));
+            itemVO.setStartTime(itemModel.getPromoModel().getStartTime().toString(DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss")));
         }else {
             itemVO.setPromoStatus(0);
         }
@@ -92,7 +91,7 @@ public class ItemHandler extends BaseHandler {
      */
     @GetMapping(value = "/get")
     @ResponseBody
-    public CommonReturnType getItem(@RequestParam(name = "id") Integer id) {
+    public CommonReturnType getItem(@RequestParam(name = "id") Integer id) throws BusinessException {
         ItemModel itemModel = null;
         //先取本地缓存
         itemModel = (ItemModel)redisTemplate.getFromCommonCache("item_"+id);
@@ -102,7 +101,6 @@ public class ItemHandler extends BaseHandler {
             //若redis内不存在对应的itemModel,则访问下游service
             if(itemModel == null){
                 itemModel = itemService.getItemById(id);
-                System.out.println(itemModel);
                 //设置itemModel到redis内
                 redisTemplate.setKey("item_"+id,itemModel);
                 redisTemplate.expire("item_"+id,10, TimeUnit.MINUTES);
@@ -116,7 +114,7 @@ public class ItemHandler extends BaseHandler {
 
     // 发布秒杀活动
     @RequestMapping(value = "/publishpromo",method = {RequestMethod.GET})
-    public CommonReturnType publishPromo(@RequestParam("id") Integer id){
+    public CommonReturnType publishPromo(@RequestParam("id") Integer id) throws BusinessException {
         promoService.publishPromo(id);
         return CommonReturnType.create(null);
     }

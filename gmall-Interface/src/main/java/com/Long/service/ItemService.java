@@ -20,10 +20,10 @@ public interface ItemService {
     List<ItemModel> listItem();
 
     // 商品详情浏览
-    ItemModel getItemById(Integer id);
+    ItemModel getItemById(Integer id) throws BusinessException;
 
     // 缓存获取商品信息
-    ItemModel getItemByIdInCache(Integer id);
+    ItemModel getItemByIdInCache(Integer id) throws BusinessException;
 
     // 异步更新库存
     boolean asyncDecreaseStock(Integer itemId, Integer amount);
