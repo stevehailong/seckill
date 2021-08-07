@@ -1,0 +1,29 @@
+#\u6CE8\u518C\u670D\u52A1\u7684\u540D\u79F0
+dubbo:
+  application:
+    name: orderService
+  #\u6CE8\u518C\u4E2D\u5FC3\u7684ip\u5730\u5740
+  registry:
+    address: 127.0.0.1:2181  #\u6CE8\u518C\u4E2D\u5FC3\u7684\u5730\u5740
+    protocol: zookeeper #\u6CE8\u518C\u4E2D\u5FC3\u7684\u540D\u79F0
+  protocol:
+    name: dubbo #dubbo\u4F7F\u7528\u7684\u901A\u4FE1\u534F\u8BAE\u540D\u79F0
+    port: 20889 #dubbo\u4F7F\u7528\u7684\u901A\u4FE1\u534F\u8BAE\u7AEF\u53E3
+  monitor:
+    protocol: registry #\u8FDE\u63A5\u76D1\u63A7\u4E2D\u5FC3\u7684\u914D\u7F6E
+  provider:
+    timeout: 1000 #\u63D0\u4F9B\u8005\u6240\u6709\u5B9E\u73B0\u7C7B\u7684\u8C03\u7528\u8D85\u65F6\u65F6\u95F4\u8BBE\u7F6E
+#\u914D\u7F6Emapper.xml\u7684\u8DEF\u5F84
+mybatis:
+  mapper-locations: classpath:mapping/*.xml
+spring:
+  #\u914D\u7F6E\u6570\u636E\u5E93JDBC\u6570\u636E\u6E90
+  datasource:
+    name: seckill
+    url: jdbc:mysql://localhost:3306/seckill?useUnicode=true&characterEncoding=UTF-8&serverTimezone=GMT%2B8&useSSL=false
+    username: root
+    password: 77549252
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+server:
+  port: 8083

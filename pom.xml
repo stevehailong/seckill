@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.long</groupId>
+    <artifactId>Dubbo</artifactId>
+    <packaging>pom</packaging>
+    <version>1.0-SNAPSHOT</version>
+    <modules>
+        <module>gmall-Interface</module>
+        <module>UserService</module>
+        <module>Redis-Service</module>
+        <module>AllController</module>
+        <module>Order-Service</module>
+        <module>Item-Service</module>
+        <module>mqService</module>
+        <module>promoService</module>
+    </modules>
+    <properties>
+        <java.version>1.8</java.version>
+    </properties>
+    <dependencies>
+    </dependencies>
+</project>
