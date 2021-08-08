@@ -42,7 +42,7 @@ public class MqProducer implements mqService{
     private String topicName;
 
 
-    @Reference(timeout = 10000)
+    @Reference
     private OrderService orderService;
 
     @Autowired
@@ -130,11 +130,7 @@ public class MqProducer implements mqService{
         }
         if(sendResult.getLocalTransactionState() == LocalTransactionState.ROLLBACK_MESSAGE){
             return false;
-        }else if(sendResult.getLocalTransactionState() == LocalTransactionState.COMMIT_MESSAGE){
-            return true;
-        }else{
-            return false;
-        }
+        }else return sendResult.getLocalTransactionState() == LocalTransactionState.COMMIT_MESSAGE;
 
     }
 

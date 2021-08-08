@@ -25,11 +25,14 @@ public interface ItemService {
     // 缓存获取商品信息
     ItemModel getItemByIdInCache(Integer id) throws BusinessException;
 
-    // 异步更新库存
-    boolean asyncDecreaseStock(Integer itemId, Integer amount);
+    // 普通商品库存扣减
+    boolean decreaseSimpleStock(Integer itemId, Integer amount,Integer stock) throws BusinessException;
 
     // 回滚库存
     boolean increaseStock(Integer itemId, Integer amount);
+
+    // 普通商品回滚库存
+    boolean increaseSimpleStock(Integer itemId, Integer amount);
 
     // 库存扣减
     boolean decreaseStock(Integer itemId, Integer amount) throws BusinessException;

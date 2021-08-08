@@ -14,6 +14,8 @@ public interface RedisServive {
     void expire(Object k, long v, TimeUnit unit);
     Long increment(Object k,long v);
     boolean hasKey(Object k);
+    void delete(Object k);
+    void deleteCash(String key);
     // 存cache
     void setCommonCache(String key, Object value);
     // 取cache

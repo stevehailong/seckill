@@ -41,7 +41,7 @@ public class OrderHandler extends BaseHandler {
     private RedisServive redisTemplate;
     @Reference
     private mqService mqProducer;
-    @Reference
+    @Reference(retries = 5)
     private PromoService promoService;
     // 创建线程池进行队列泄洪
     private ExecutorService executorService;
@@ -97,14 +97,15 @@ public class OrderHandler extends BaseHandler {
         if(!redisVerifyCode.equalsIgnoreCase(verifyCode)){
             throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR,"请求非法，验证码错误");
         }
-        //获取秒杀访问令牌
-        String promoToken = promoService.generateSecondKillToken(promoId,itemId,userModel.getId());
-
-        if(promoToken == null){
-            throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR,"生成令牌失败");
+        if(promoId != null){
+            //获取秒杀访问令牌
+            String promoToken = promoService.generateSecondKillToken(promoId,itemId,userModel.getId());
+            if(promoToken == null)
+                throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR,"生成令牌失败");
+            return CommonReturnType.create(promoToken);
         }
         //返回对应的结果
-        return CommonReturnType.create(promoToken);
+        return CommonReturnType.create(null);
     }
 
     /**

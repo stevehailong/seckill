@@ -1,5 +1,6 @@
 package com.Long.service;
 import com.Long.dao.ItemStockMapper;
+import com.alibaba.dubbo.config.annotation.Reference;
 import com.alibaba.fastjson.JSON;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
@@ -34,6 +35,9 @@ public class MqConsumer {
     @Value("${mq.topicName}")
     private String topicName;
 
+    @Reference(retries = 5)
+    private RedisServive redisServive;
+
     @PostConstruct
     public void init() throws MQClientException {
         consumer = new DefaultMQPushConsumer("stock_consumer_group");
@@ -50,6 +54,10 @@ public class MqConsumer {
                 Integer itemId = (Integer) map.get("itemId");
                 Integer amount = (Integer) map.get("amount");
                 itemStockMapper.decreaseStock(itemId,amount);
+                // 下单成功删除缓存
+                redisServive.delete("item_"+itemId);
+                redisServive.deleteCash("item_"+itemId);
+                redisServive.delete("item_validate_"+itemId);
                 return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
             }
         });

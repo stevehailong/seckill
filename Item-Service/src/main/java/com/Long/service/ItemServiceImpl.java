@@ -44,7 +44,7 @@ public class ItemServiceImpl implements ItemService {
     @Autowired
     private stockLogMapper stockLogMapper;
 
-    @Reference
+    @Reference(retries = 5)
     private PromoService promoService;
 
     @Reference
@@ -142,12 +142,6 @@ public class ItemServiceImpl implements ItemService {
         return itemModel;
     }
 
-    // 异步更新库存
-    @Override
-    public boolean asyncDecreaseStock(Integer itemId, Integer amount) {
-        return mqProducer.asyncReduceStock(itemId, amount);
-    }
-
     @Override
     public boolean increaseStock(Integer itemId, Integer amount) {
         redisServive.increment("promo_item_stock_"+itemId, amount);
@@ -157,8 +151,6 @@ public class ItemServiceImpl implements ItemService {
     @Override
     @Transactional // 设计到减库存，开启事务 返回值的巧妙，不执行sql语句返回0
     public boolean decreaseStock(Integer itemId, Integer amount) throws BusinessException {
-//        int affectedRow = itemStockMapper.decreaseStock(itemId, amount);
-//        使用redis扣减库存
         long result = redisServive.increment("promo_item_stock_"+itemId, amount * -1);
         if (result > 0) {
             return true;
@@ -180,6 +172,33 @@ public class ItemServiceImpl implements ItemService {
         itemMapper.increaseSales(itemId, amount);
     }
 
+    @Override
+    public boolean increaseSimpleStock(Integer itemId, Integer amount) {
+        redisServive.increment("item_stock_"+itemId, amount);
+        return true;
+    }
+
+    //普通商品扣减库存
+    @Override
+    @Transactional // 设计到减库存，开启事务 返回值的巧妙，不执行sql语句返回0
+    public boolean decreaseSimpleStock(Integer itemId, Integer amount, Integer stock) throws BusinessException {
+//        使用redis扣减库存,如果没有就设置商品库存
+        if (redisServive.getKey("item_stock_"+itemId) == null)
+            redisServive.setKey("item_stock_"+itemId,stock);
+        long result = redisServive.increment("item_stock_"+itemId, amount * -1);
+        if (result > 0) {
+            return true;
+        } else if(result == 0){
+            //打上库存已售罄的标识
+           redisServive.setKey("item_stock_invalid_"+itemId,"true");
+            //更新库存成功
+            return true;
+        }else {
+            // 回滚redis的库存
+            increaseSimpleStock(itemId,amount);
+            return false;
+        }
+    }
     //初始化对应的库存流水
     @Override
     @Transactional

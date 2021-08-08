@@ -31,10 +31,10 @@ import java.time.format.DateTimeFormatter;
 @com.alibaba.dubbo.config.annotation.Service(interfaceClass = com.Long.service.OrderService.class)
 public class OrderServiceImpl implements OrderService {
 
-    @Reference(timeout = 10000)
+    @Reference
     private ItemService itemService;
 
-    @Reference(timeout = 10000)
+    @Reference
     private UserService userService;
 
     @Autowired
@@ -62,7 +62,12 @@ public class OrderServiceImpl implements OrderService {
             throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR, "购买数量不正确");
         }
         //落单减库存 用户会拍下不付款 支付减库存异造成超卖问题
-        boolean result = itemService.decreaseStock(itemId, amount);
+        boolean result;
+        if (promoId == null) {
+            result = itemService.decreaseSimpleStock(itemId, amount, itemModel.getStock());
+        } else {
+            result = itemService.decreaseStock(itemId, amount);
+        }
         if (!result) {
             throw new BusinessException(EmBusinessError.STOCK_NOT_ENOUGH);
         }

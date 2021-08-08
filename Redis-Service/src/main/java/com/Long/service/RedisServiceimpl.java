@@ -39,6 +39,11 @@ public class RedisServiceimpl implements RedisServive {
     @Override
     public boolean hasKey(Object k){return redisTemplate.hasKey(k);}
 
+    @Override
+    public void delete(Object k) {
+        redisTemplate.delete(k);
+    }
+
     @PostConstruct // 加载bean时优先执行该方法
     public void init(){
         commonCache = CacheBuilder.newBuilder()
@@ -53,6 +58,11 @@ public class RedisServiceimpl implements RedisServive {
     @Override
     public void setCommonCache(String key, Object value) {
         commonCache.put(key,value);
+    }
+
+    @Override
+    public void deleteCash(String key) {
+        commonCache.invalidate(key);
     }
 
     @Override
